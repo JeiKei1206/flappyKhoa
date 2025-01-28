@@ -195,11 +195,17 @@
             requestAnimationFrame(gameLoop);
         }
 
-        window.addEventListener("resize", () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            gameLoop();  // Cập nhật trò chơi khi thay đổi kích thước
+        window.addEventListener("orientationchange", function() {
+            if (window.orientation === 90 || window.orientation === -90) {
+                canvas.width = window.innerHeight;
+                canvas.height = window.innerWidth;
+            } else {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            gameLoop();
         });
+
 
         startButton.addEventListener("mousedown", () =>{
             startButton.style.display = "none";
