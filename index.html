@@ -5,14 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flappy Khoa</title>
     <style>
+
+    body {
+        margin: 0;
+        overflow: hidden;
+        background: linear-gradient(to bottom, #70c5ce, #ffffff);
+    }
+
+    canvas {
+        display: block;
+        width: 100%;  /* Đảm bảo canvas chiếm hết chiều rộng */
+        height: 100%; /* Đảm bảo canvas chiếm hết chiều cao */
+    }
+
+    #startButton {
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 15px 30px;
+        font-size: 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* Media Query cho chế độ landscape */
+    @media screen and (orientation: landscape) {
         body {
-            margin: 0;
-            overflow: hidden;
-            background: linear-gradient(to bottom, #70c5ce, #ffffff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
         canvas {
-            display: block;
+            width: 100%;
+            height: 100%;
         }
 
         #startButton {
@@ -20,28 +51,8 @@
             top: 60%;
             left: 50%;
             transform: translate(-50%, -50%);
-            padding: 15px 30px;
-            font-size: 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
         }
-
-        /* CSS để xoay màn hình */
-        @media (orientation: landscape) {
-            body, html {
-                width: 100%;
-                height: 100%;
-                overflow: hidden;
-            }
-
-            canvas {
-                width: 100%;
-                height: 100%;
-            }
-        }
+    }
     </style>
 </head>
 <body>
@@ -49,14 +60,16 @@
     <button id="startButton">Bắt đầu</button>
 
     <script>
-        const jumpSound = new Audio('https://github.com/JeiKei1206/flappyKhoa/raw/main/tap.MP3');
+        const jumpSound = new Audio('https://github.com/JeiKei1206/flappyKhoa/raw/main/tap.MP3'); 
         const gameoverSound = new Audio('https://github.com/JeiKei1206/flappyKhoa/raw/main/game_over.mp3');
+
         document.addEventListener("keydown", (e) => {
             if (e.code === "Space" && !isGameOver) {
                 bird.velocity = jump;
                 jumpSound.play();
             }
         });
+
         document.addEventListener("click", () => {
             if (!isGameOver) {
                 bird.velocity = jump;
@@ -67,8 +80,15 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // Cập nhật kích thước canvas theo kích thước cửa sổ
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        // Gọi resizeCanvas mỗi khi cửa sổ thay đổi kích thước
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
 
         const startButton = document.getElementById("startButton");
 
@@ -84,13 +104,15 @@
             score = 0;
             pipeWidth = 80;
             pipeGap = 150;
+
             createPipe(true);
             createPipe(true);
         }
 
-        function createPipe() {
+        function createPipe(isFirstPipe = false) {
             const pipeHeight = Math.random() * (canvas.height - pipeGap - 100) + 50;
             const pipeX = canvas.width + pipes.length * (pipeWidth + 200);
+
             pipes.push({
                 x: pipeX,
                 y: 0,
@@ -168,7 +190,7 @@
             ctx.fillText(`Your Score: ${score}`, canvas.width / 2, canvas.height / 2);
 
             startButton.style.top = `${canvas.height / 2 + 80}px`;
-            startButton.style.display = "block";
+            startButton.style.display = "block"; 
         }
 
         function gameLoop() {
@@ -194,24 +216,18 @@
             requestAnimationFrame(gameLoop);
         }
 
-        window.addEventListener("orientationchange", function() {
-            if (window.orientation === 90 || window.orientation === -90) {
-                canvas.width = window.innerHeight;
-                canvas.height = window.innerWidth;
-            } else {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            gameLoop();
-        });
-
-        startButton.addEventListener("mousedown", () =>{
+        startButton.addEventListener("mousedown", () => {
             startButton.style.display = "none";
             resetGame();
             gameLoop();
         });
 
+        document.addEventListener("keydown", (e) => {
+            if (e.code === "Space" && !isGameOver) bird.velocity = jump;
+        });
+
         resetGame();
+
     </script>
 </body>
 </html>
