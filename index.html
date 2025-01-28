@@ -180,11 +180,12 @@
             requestAnimationFrame(gameLoop);
         }
 
-        startButton.addEventListener("click", () => {
-            startButton.style.display = "none";  
-            resetGame();  
-            gameLoop();  
+        startButton.addEventListener("mousedown", () =>{
+            startButton.style.display = "none";
+            resetGame();
+            gameLoop();
         });
+
 
         document.addEventListener("keydown", (e) => {
             if (e.code === "Space" && !isGameOver) bird.velocity = jump;
