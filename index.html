@@ -5,15 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flappy Khoa</title>
     <style>
+        @media (orientation: landscape) {
+            body, html {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            canvas {
+                width: 100%;
+                height: 100%;
+            }
+        }
 
         body {
             margin: 0;
             overflow: hidden;
             background: linear-gradient(to bottom, #70c5ce, #ffffff);
         }
+
         canvas {
             display: block;
         }
+
         #startButton {
             position: absolute;
             top: 60%;
@@ -62,7 +76,7 @@
         function resetGame() {
             bird = { x: canvas.width / 4, y: canvas.height / 2, width: 30, height: 30, velocity: 0 };
             gravity = 0.3;
-            jump = -6;
+            jump = -7;
             isGameOver = false;
             pipes = [];
             frameCount = 0;
@@ -73,6 +87,7 @@
             createPipe(true);
             createPipe(true);
         }
+
         function createPipe(isFirstPipe = false) {
             const pipeHeight = Math.random() * (canvas.height - pipeGap - 100) + 50;
             const pipeX = canvas.width + pipes.length * (pipeWidth + 200);  // Sửa công thức này để tạo khoảng cách đều cho cả cột đầu tiên và các cột sau.
@@ -92,7 +107,6 @@
                 scored: false,
             });
         }
-
 
         function drawBird() {
             ctx.fillStyle = "yellow";
@@ -180,15 +194,11 @@
             frameCount++;
             requestAnimationFrame(gameLoop);
         }
-        window.addEventListener("orientationchange", function() {
-            if (window.orientation === 90 || window.orientation === -90) {
-                canvas.width = window.innerHeight;
-                canvas.height = window.innerWidth;
-            } else {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            gameLoop(); // Khởi động lại vòng lặp trò chơi
+
+        window.addEventListener("resize", () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            gameLoop();  // Cập nhật trò chơi khi thay đổi kích thước
         });
 
         startButton.addEventListener("mousedown", () =>{
@@ -197,13 +207,11 @@
             gameLoop();
         });
 
-
         document.addEventListener("keydown", (e) => {
             if (e.code === "Space" && !isGameOver) bird.velocity = jump;
         });
 
         resetGame();
-
     </script>
 </body>
 </html>
