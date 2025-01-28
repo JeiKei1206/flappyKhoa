@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -6,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flappy Khoa</title>
     <style>
-
         body {
             margin: 0;
             overflow: hidden;
@@ -31,25 +29,17 @@
             cursor: pointer;
         }
 
-        /* Media query cho chế độ landscape */
-        @media screen and (orientation: landscape) {
-            body {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
+        /* CSS để xoay màn hình */
+        @media (orientation: landscape) {
+            body, html {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
             }
 
             canvas {
                 width: 100%;
                 height: 100%;
-            }
-
-            #startButton {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
             }
         }
     </style>
@@ -59,12 +49,12 @@
     <button id="startButton">Bắt đầu</button>
 
     <script>
-        const jumpSound = new Audio('https://github.com/JeiKei1206/flappyKhoa/raw/main/tap.MP3'); // Thêm âm thanh
-        const gameoverSound = new Audio('https://github.com/JeiKei1206/flappyKhoa/raw/main/game_over.mp3'); // Thêm âm thanh
+        const jumpSound = new Audio('https://github.com/JeiKei1206/flappyKhoa/raw/main/tap.MP3');
+        const gameoverSound = new Audio('https://github.com/JeiKei1206/flappyKhoa/raw/main/game_over.mp3');
         document.addEventListener("keydown", (e) => {
             if (e.code === "Space" && !isGameOver) {
                 bird.velocity = jump;
-                jumpSound.play(); // Phát âm thanh khi chim nhảy
+                jumpSound.play();
             }
         });
         document.addEventListener("click", () => {
@@ -93,16 +83,14 @@
             frameCount = 0;
             score = 0;
             pipeWidth = 80;
-            pipeGap = 150; 
-
+            pipeGap = 150;
             createPipe(true);
             createPipe(true);
         }
 
-        function createPipe(isFirstPipe = false) {
+        function createPipe() {
             const pipeHeight = Math.random() * (canvas.height - pipeGap - 100) + 50;
-            const pipeX = canvas.width + pipes.length * (pipeWidth + 200);  // Sửa công thức này để tạo khoảng cách đều cho cả cột đầu tiên và các cột sau.
-
+            const pipeX = canvas.width + pipes.length * (pipeWidth + 200);
             pipes.push({
                 x: pipeX,
                 y: 0,
@@ -167,11 +155,11 @@
         function displayScore() {
             ctx.fillStyle = "black";
             ctx.font = "30px Arial";
-            ctx.fillText(`Score: ${score}`, 60, 60);  // Xích sang phải 1 chút
+            ctx.fillText(`Score: ${score}`, 60, 60);
         }
 
         function displayGameOver() {
-            gameoverSound.play(); // Phát âm thanh khi game over
+            gameoverSound.play();
             ctx.fillStyle = "black";
             ctx.textAlign = "center";
             ctx.font = "50px Arial";
@@ -180,7 +168,7 @@
             ctx.fillText(`Your Score: ${score}`, canvas.width / 2, canvas.height / 2);
 
             startButton.style.top = `${canvas.height / 2 + 80}px`;
-            startButton.style.display = "block"; 
+            startButton.style.display = "block";
         }
 
         function gameLoop() {
@@ -206,15 +194,21 @@
             requestAnimationFrame(gameLoop);
         }
 
+        window.addEventListener("orientationchange", function() {
+            if (window.orientation === 90 || window.orientation === -90) {
+                canvas.width = window.innerHeight;
+                canvas.height = window.innerWidth;
+            } else {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            gameLoop();
+        });
 
         startButton.addEventListener("mousedown", () =>{
             startButton.style.display = "none";
             resetGame();
             gameLoop();
-        });
-
-        document.addEventListener("keydown", (e) => {
-            if (e.code === "Space" && !isGameOver) bird.velocity = jump;
         });
 
         resetGame();
