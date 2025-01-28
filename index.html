@@ -195,6 +195,16 @@
             frameCount++;
             requestAnimationFrame(gameLoop);
         }
+        window.addEventListener("orientationchange", function() {
+            if (window.orientation === 90 || window.orientation === -90) {
+                canvas.width = window.innerHeight;
+                canvas.height = window.innerWidth;
+            } else {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            gameLoop(); // Khởi động lại vòng lặp trò chơi
+        });
 
         startButton.addEventListener("mousedown", () =>{
             startButton.style.display = "none";
