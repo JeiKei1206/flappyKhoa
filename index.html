@@ -168,7 +168,7 @@
         }
 
         function updatePipes() {
-            pipes.forEach(pipe => pipe.x -= 3);
+            pipes.forEach(pipe => pipe.x -= 2);
             if (pipes[0] && pipes[0].x + pipeWidth < 0) pipes.splice(0, 2);
 
             // Cập nhật điểm khi ống đi qua
