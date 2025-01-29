@@ -58,6 +58,14 @@
             color: white;
             text-shadow: 2px 2px black;
         }
+        #credit {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 16px;
+            color: white;
+            text-shadow: 1px 1px black;
+        }
     </style>
 </head>
 <body>
@@ -73,7 +81,9 @@
     </div>
 
     <canvas id="gameCanvas"></canvas>
-    <div id="score">0</div> <!-- Chỉ hiển thị số điểm -->
+    <div id="score">0</div> 
+
+    <div id="credit">cre: kitcat jin</div> 
 
     <script>
         const bgImage = new Image();
@@ -108,7 +118,7 @@
         let bird, pipes, gravity, jump, isGameOver, score, pipeWidth, pipeGap, pipeSpacing, lastPipeX, pipeInterval;
 
         function resetGame() {
-            bird = { x: canvas.width / 4, y: canvas.height / 2, width: 40, height: 30, velocity: 0 };
+            bird = { x: canvas.width / 8, y: canvas.height / 4, width: 80, height: 60, velocity: 0 };
             gravity = 0.3;
             jump = -6;
             isGameOver = false;
@@ -188,6 +198,8 @@
             gameoverSound.play();
             document.getElementById("gameOverScreen").style.display = "flex";
             document.getElementById("finalScore").innerText = `SCORE: ${score/2}`;  // Hiển thị số điểm khi game over
+
+            // Ẩn số điểm trên đầu khi game over
             document.getElementById("score").style.display = "none";
         }
 
