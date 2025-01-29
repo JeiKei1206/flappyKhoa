@@ -33,13 +33,13 @@
     <button id="startButton">Bắt đầu</button>
 
     <script>
-        const jumpSound = new Audio('/Audio/tap.MP3'); // Thêm âm thanh
-        const gameoverSound = new Audio('/Audio/game_over.mp3'); // Thêm âm thanh
+        const jumpSound = new Audio('https://github.com/JeiKei1206/flappyKhoa/raw/main/tap.MP3'); // Âm thanh nhảy
+        const gameoverSound = new Audio('https://github.com/JeiKei1206/flappyKhoa/raw/main/game_over.mp3'); // Âm thanh game over
 
         document.addEventListener("keydown", (e) => {
             if (e.code === "Space" && !isGameOver) {
                 bird.velocity = jump;
-                jumpSound.play(); // Phát âm thanh khi chim nhảy
+                jumpSound.play();
             }
         });
 
@@ -58,26 +58,32 @@
 
         const startButton = document.getElementById("startButton");
 
-        let bird, pipes, gravity, jump, isGameOver, frameCount, score, pipeWidth, pipeGap;
+        let bird, pipes, gravity, jump, isGameOver, score, pipeWidth, pipeGap, pipeSpacing, lastPipeX, pipeInterval;
 
         function resetGame() {
             bird = { x: canvas.width / 4, y: canvas.height / 2, width: 30, height: 30, velocity: 0 };
             gravity = 0.3;
             jump = -6;
             isGameOver = false;
-            pipes = [];  // Không tạo cột ngay khi reset
-            frameCount = 0;
+            pipes = [];
             score = 0;
             pipeWidth = 80;
             pipeGap = 150;
+            pipeSpacing = 300; // Khoảng cách tối thiểu giữa các cột
+            lastPipeX = canvas.width; // Bắt đầu từ cạnh phải màn hình
+
+            if (pipeInterval) clearInterval(pipeInterval); // Dừng tạo cột nếu có
         }
 
         function createPipe() {
+            // Cột mới cách cột cuối cùng ít nhất `pipeSpacing` px
+            const pipeX = Math.max(lastPipeX + pipeSpacing, canvas.width);
             const pipeHeight = Math.random() * (canvas.height - pipeGap - 100) + 50;
-            const pipeX = canvas.width + pipes.length * (pipeWidth + 200);
 
             pipes.push({ x: pipeX, y: 0, width: pipeWidth, height: pipeHeight, scored: false });
             pipes.push({ x: pipeX, y: pipeHeight + pipeGap, width: pipeWidth, height: canvas.height - pipeHeight - pipeGap, scored: false });
+
+            lastPipeX = pipeX; // Cập nhật vị trí cột cuối cùng
         }
 
         function drawBird() {
@@ -161,21 +167,18 @@
             checkCollision();
             updateScore();
 
-            if (frameCount % 150 === 0) createPipe();
-
-            frameCount++;
             requestAnimationFrame(gameLoop);
         }
 
         startButton.addEventListener("mousedown", () => {
             startButton.style.display = "none";
-            resetGame(); // Chim xuất hiện ngay lập tức
-            gameLoop();  // Bắt đầu game loop
+            resetGame();
+            gameLoop(); // Bắt đầu game loop ngay lập tức
 
-            // Tạo cột sau 4 giây
+            // Sau 4 giây, bắt đầu tạo cột đầu tiên và sau đó tạo cột mỗi 2 giây
             setTimeout(() => {
                 createPipe();  // Tạo cột đầu tiên
-                frameCount = 0; // Reset frameCount để tiếp tục tạo cột theo thời gian
+                pipeInterval = setInterval(createPipe, 2000); // Sau đó tạo cột mỗi 2 giây
             }, 4000);
         });
 
