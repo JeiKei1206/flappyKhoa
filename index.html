@@ -124,7 +124,7 @@
 
         function resetGame() {
             bird = { x: canvas.width / 8, y: canvas.height / 4, width: 80, height: 60, velocity: 0 };
-            gravity = 0.3;
+            gravity = 0.25;
             jump = -6;
             isGameOver = false;
             pipes = [];
@@ -173,7 +173,7 @@
         }
 
         function updatePipes() {
-            pipes.forEach(pipe => pipe.x -= 2);
+            pipes.forEach(pipe => pipe.x -= 3);
             if (pipes[0] && pipes[0].x + pipeWidth < 0) pipes.splice(0, 2);
 
             // Cập nhật điểm khi ống đi qua
